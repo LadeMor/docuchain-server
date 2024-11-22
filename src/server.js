@@ -62,31 +62,7 @@ app.get("/me", (req, res) => {
     }
 });
 
-const getUserDataById = async id => {
-    try{
-        const userData = await pool.query('SELECT "First_name", "Last_name", "Email", "Organization" FROM "User" WHERE "Id" = $1', [id]);
-        return userData.rows[0];
-    }catch(error){
-        console.error("Database query error: ", error);
-        throw error;
-    }
-}
 
-app.get("/user/:id", async (req, res) => {
-    const userId = req.params.id;
-
-    try {
-        const user = await getUserDataById(userId); 
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        res.json(user); 
-    } catch (error) {
-        console.error("Error fetching user data: ", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
-});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

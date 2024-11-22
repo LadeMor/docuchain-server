@@ -75,3 +75,20 @@ exports.loginUsers = async (req, res) => {
         });
     }
 }
+
+exports.getUserById = async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+        const user = await userService.getUserById(userId);
+        res.json(user); 
+    } catch (error) {
+
+        if(error.code == "INVALID_ID"){
+            return res.status(409).json("Invalid user id");
+        }
+
+        console.error("Error fetching user data: ", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}

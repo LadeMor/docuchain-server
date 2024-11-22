@@ -11,6 +11,16 @@ exports.getUserByEmail = async (email) => {
     
 }
 
+exports.getUserDataById = async (id) => {
+    try{
+        const userData = await pool.query('SELECT "First_name", "Last_name", "Email", "Organization" FROM "User" WHERE "Id" = $1', [id]);
+        return userData.rows[0];
+    }catch(error){
+        console.error("Database query error: ", error);
+        throw error;
+    }
+}
+
 exports.createUser = async (firstName, lastName, email, hashedPassword, organization) => {
     
     const result = await pool.query(
@@ -19,3 +29,4 @@ exports.createUser = async (firstName, lastName, email, hashedPassword, organiza
     );
     return result.rows[0];
 }
+

@@ -43,3 +43,15 @@ exports.loginUser = async (email, password) => {
         {expiresIn: "1h"}
     );
 }
+
+exports.getUserById = async (id) => {
+    const user = await userModel.getUserDataById(id);
+
+    if(!user){
+        const error = new Error("Invalid id");
+        error.code = "INVALID_ID";
+        throw error;
+    }
+
+    return user;
+}
