@@ -2,10 +2,20 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const pool = require("./config/database");
-const userRoutes = require("./routes/userRouter");
+const {ethers} = require("ethers");
 
-require('dotenv').config();
+const pool = require("./config/database");
+
+const userRoutes = require("./routes/userRouter");
+const documentRoutes = require("./routes/documentRoute");
+
+
+const provider = new ethers.JsonRpcProvider(`https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`, {
+    name: "mainnet",
+    chainId: 1
+});
+
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 const app = express();
 
 const corsOptions = {
@@ -19,7 +29,16 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
+
 app.use("/user", userRoutes);
+app.use("/document", documentRoutes);
+
+async function checkConnection() {
+    const blockNumber = await provider.getBlockNumber();
+    console.log("Current block number:", blockNumber);
+}
+
+checkConnection();
 
 const authenticateToken = (req, res, next) => {
     const token = req.cookies.authToken;
