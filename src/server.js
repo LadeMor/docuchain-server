@@ -9,13 +9,15 @@ const pool = require("./config/database");
 const userRoutes = require("./routes/userRouter");
 const documentRoutes = require("./routes/documentRoute");
 
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
-const provider = new ethers.JsonRpcProvider(`https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`, {
-    name: "mainnet",
+
+const provider = new ethers.JsonRpcProvider(`https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`, {
+    name: "sepolia",
     chainId: 1
 });
 
-require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
+
 const app = express();
 
 const corsOptions = {
