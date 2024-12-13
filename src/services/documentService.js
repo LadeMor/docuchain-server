@@ -4,13 +4,16 @@ const documentModel = require("../models/documentModel");
 
 require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 
-exports.uploadFile = async (file, userId) => {
-    const uploadPaht = path.join(__dirname, "../../uploads/documents");
-    const filePath = path.join(uploadPaht, file.name);
+exports.uploadFile = async (fileName, fileType, fileSize, userId) => {
+    const uploadPath = path.join(__dirname, "../../uploads/documents");
+    const tempPath = path.join(__dirname, "../../uploads/temp");
 
-    await fs.rename(file.temFilePath, filePath);
+    const filePath = path.join(uploadPath, fileName);
+    const tempFilePath = path.join(tempPath, fileName);
 
-    const document = await documentModel.uploadDocument(userId, file.name, filePath, file.mimetype, file.size);
+    //await fs.rename(tempFilePath, filePath);
 
-    return document.id;
+    const document = await documentModel.uploadDocument(userId, fileName, filePath, fileType, fileSize);
+    console.log(document);
+    return document.Id;
 }

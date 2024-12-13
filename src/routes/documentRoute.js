@@ -1,34 +1,32 @@
-const express = require("express");
-const documentService = require("../services/documentService");
+// const express = require("express");
+// const path = require("path");
+// const fs = require("fs-extra");
+// const documentService = require("../services/documentService");
 
-const router = express.Router();
+// const app = express();
+// app.use(express.json());
 
+// const router = express.Router();
 
-router.post("/upload", async (req, res) => {
-    try{
+// const uploadDir = path.join(__dirname, "uploads");
+// if (!fs.existsSync(uploadDir)) {
+//   fs.mkdirSync(uploadDir);
+// }
 
-        if(!req.files || !req.files.document){
-            return res.status(400).json({message: "No file uploaded"});
-        }
+// router.post("/upload", async (req, res) => {
+    
+//     try{
 
-        const document  = req.files.document;
-        const userId = req.body.userId;
+//         console.log(req)
+//         if(!req.files || !req.files.document){
+//             return res.status(400).json({message: "No file uploaded"})
+//         }
 
-        if(!userId){
-            return res.status(400).json({message: "Missing user Id"});
-        }
+//     }catch(error){
+//         console.error("Error uploading files: " + error);
+//         res.status(500).json({message: "Internal server error"});
+//     }
 
-        const documentId = documentService.uploadFile(document, userId);
+// });
 
-        res.status(201).json({
-            message: "File uploaded successfully",
-            documentId
-        });
-
-    }catch(error){
-        console.error("Error uploading file:", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
-});
-
-module.exports = router;
+// module.exports = router;
