@@ -7,6 +7,7 @@ const path = require("path");
 const fs = require("fs-extra");
 const bodyParser = require('body-parser');
 const multer = require("multer");
+const crypto = require("crypto");
 
 const pool = require("./config/database");
 
@@ -16,10 +17,11 @@ const documentService = require("./services/documentService");
 
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
-const provider = new ethers.JsonRpcProvider(`https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`, {
+const provider = new ethers.JsonRpcProvider(`https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`, { 
     name: "sepolia",
     chainId: 1
 });
+
 
 const app = express();
 
@@ -70,12 +72,17 @@ app.post("/document/upload", upload.single("document"), async (req, res) => {
             return res.status(400).json({ message: "Missing required fields" });
         }
 
+        const fileContent = fs.readFileSync(file.path);
+
+        const hash = crypto.createHash("sha256").update(fileContent).digest("hex");
+
         const document = {
             filePath: file.path,
             userId,
             fileName: file.originalname,
             fileType: file.mimetype,
             fileSize: file.size,
+            fileHash: hash
         };
        
         const documentId = await documentService.uploadFile(
@@ -83,6 +90,7 @@ app.post("/document/upload", upload.single("document"), async (req, res) => {
             document.fileType,
             document.fileSize,
             document.userId,
+            document.fileHash
         );
 
         res.status(201).json({

@@ -1,15 +1,18 @@
 const { ethers } = require("ethers");
+const path = require("path");
 
-const CONTRACT_ADDRESS = "0xYourContractAddress";
+require("dotenv").config({path: require('path').resolve(__dirname, "../.env")});
+
+const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
 
 const CONTRACT_ABI = [
     "event DocumentStored(string hash, uint256 timestamp, uint256 userId)",
     "function storeDocumentMeta(string hash, uint256 timestamp, uint256 userId) public"
 ];
 
-const provider = new ethers.providers.JsonRpcProvider("https://your-rpc-endpoint");
+const provider = new ethers.JsonRpcProvider(`https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`);
 
-const PRIVATE_KEY = "your-private-key";
+const PRIVATE_KEY = process.env.METAMASK_PRIVATE_KEY;
 
 const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
 
